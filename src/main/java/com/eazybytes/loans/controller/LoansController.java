@@ -2,6 +2,7 @@ package com.eazybytes.loans.controller;
 
 import com.eazybytes.loans.constants.LoansConstants;
 import com.eazybytes.loans.dto.ErrorResponseDto;
+import com.eazybytes.loans.dto.LoansContactInfoDto;
 import com.eazybytes.loans.dto.LoansDto;
 import com.eazybytes.loans.dto.ResponseDto;
 import com.eazybytes.loans.service.ILoansService;
@@ -11,10 +12,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,11 +27,23 @@ import org.springframework.web.bind.annotation.*;
 )
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
 @Validated
 public class LoansController {
 
     private ILoansService loansService;
+
+    @Value("${build.info}")
+    private String buildInfo;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private LoansContactInfoDto loansContactInfoDto;
+
+    public LoansController(ILoansService iLoansService){
+        this.loansService = iLoansService;
+    }
 
     @Operation(
             summary = "Create Loan REST API",
@@ -141,5 +154,74 @@ public class LoansController {
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(LoansConstants.MESSAGE_417_UPDATE, LoansConstants.MESSAGE_417_UPDATE));
         }
+    }
+
+    @Operation(
+            summary = "Fetch Build Info details",
+            description = "REST API to fetch build info details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping(path = "/build-info")
+    public ResponseEntity<String> fetchBuildInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(buildInfo);
+    }
+
+    @Operation(
+            summary = "Fetch Java Version Details",
+            description = "REST API to fetch Java Version details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping(path = "/java-version")
+    public ResponseEntity<String> fetchJavaVersion(){
+        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("PATH"));
+    }
+
+    @Operation(
+            summary = "Fetch Contact Info Details",
+            description = "REST API to fetch Contact Info details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping(path = "/contact-info")
+    public ResponseEntity<LoansContactInfoDto> fetchContactInfoDetails(){
+        return ResponseEntity.status(HttpStatus.OK).body(loansContactInfoDto);
     }
 }

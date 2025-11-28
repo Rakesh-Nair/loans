@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+build:
+  info: "4.32.21"
+
+loans:
+  message: "Welcome to Eazybank loans related prod APIs"
+  contactDetails:
+    name: "Brook"
+    email: "brook@soulking.com"
+  onCallSupport:
+    - (123)456789
+    - (987)654321
