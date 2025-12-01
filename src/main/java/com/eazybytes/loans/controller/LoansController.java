@@ -32,7 +32,7 @@ public class LoansController {
 
     private ILoansService loansService;
 
-    @Value("${build.info}")
+    @Value("${build.version}")
     private String buildInfo;
 
     @Autowired
