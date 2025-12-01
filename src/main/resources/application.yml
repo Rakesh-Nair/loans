@@ -4,12 +4,10 @@ spring:
   application:
     name: loans
   config:
-    import:
-      - "application_qa.yml"
-      - "application_prod.yml"
+    import: "optional:configserver:http://localhost:8071/"
   profiles:
     active:
-      - "qa"
+      - "prod"
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
