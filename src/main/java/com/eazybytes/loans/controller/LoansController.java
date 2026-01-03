@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 public class LoansController {
 
     private ILoansService loansService;
+
+    private Logger logger = LoggerFactory.getLogger(LoansController.class);
 
     @Value("${build.version}")
     private String buildInfo;
@@ -87,8 +91,10 @@ public class LoansController {
     }
     )
     @GetMapping(path = "/fetch", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoansDto> fetchLoan(@RequestParam String mobileNumber){
+    public ResponseEntity<LoansDto> fetchLoan(@RequestHeader("eazybank-correlation-id") String correlationId,
+                                              @RequestParam String mobileNumber){
         LoansDto loansDto = loansService.fetchLoan(mobileNumber);
+        logger.debug("CorrelationId in fetchLoan : {}", correlationId);
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
 
