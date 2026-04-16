@@ -93,8 +93,10 @@ public class LoansController {
     @GetMapping(path = "/fetch", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoansDto> fetchLoan(@RequestHeader("eazybank-correlation-id") String correlationId,
                                               @RequestParam String mobileNumber){
+        logger.debug("fetch loan api method start");
         LoansDto loansDto = loansService.fetchLoan(mobileNumber);
-        logger.debug("CorrelationId in fetchLoan : {}", correlationId);
+        //logger.debug("CorrelationId in fetchLoan : {}", correlationId);
+        logger.debug("fetch loan api method end");
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
 
