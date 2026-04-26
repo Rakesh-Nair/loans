@@ -146,7 +146,7 @@
                 <version>3.5.1</version>
                 <configuration>
                     <to>
-                        <image>raknair/${project.artifactId}:s12</image>
+                        <image>raknair/${project.artifactId}:s13</image>
                     </to>
                 </configuration>
             </plugin>
